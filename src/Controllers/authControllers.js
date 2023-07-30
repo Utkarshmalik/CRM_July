@@ -33,7 +33,6 @@ const register = (req,res)=>{
 }
 
 const login = async (req,res)=>{
-    console.log(req.body);
     const {userId, password} = req.body;
 
     if(!userId || !password){
@@ -48,12 +47,14 @@ const login = async (req,res)=>{
       }
 
       
-
-      
       const isPasswordValid = bcrypt.compareSync(password, user.password);
 
       if(!isPasswordValid){
             return res.status(404).send({message: "Invalid Password"})
+      }
+
+      if(user.userStatus!==userStatus.approved){
+        return res.status(403).send({message:"User status must be approved to login"})
       }
 
       //jwt token 
@@ -75,7 +76,6 @@ const login = async (req,res)=>{
     }
 
 }
-
 
 module.exports ={
     register,

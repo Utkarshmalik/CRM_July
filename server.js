@@ -14,7 +14,6 @@ app.use(bodyParser.json());
 
 
 
-
 mongoose.connect(DB_URL,{useNewUrlParser:true})
 .then(()=>{
     console.log("Connected to DB successfully");
