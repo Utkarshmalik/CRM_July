@@ -7,6 +7,13 @@ const userStatus={
     rejected:"REJECTED"
 }
 
+const ticketStatus={
+    open:"OPEN",
+    inProgress:"INPROGRESS",
+    blocked:"BLOCKED",
+    closed:"CLOSED"
+}
+
 const userTypes={
     customer:"CUSTOMER",
     engineer:"ENGINEER",
@@ -16,5 +23,6 @@ const userTypes={
 
 module.exports={
     userStatus,
-    userTypes
+    userTypes,
+    ticketStatus
 }

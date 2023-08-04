@@ -7,6 +7,7 @@ const authRoutes = require("./src/Routes/authRoutes");
 const userRoutes = require("./src/Routes/userRoutes");
 const serverConfigs = require("./src/configs/server.configs");
 const { DB_URL } = require("./src/configs/db.configs");
+const ticketRoutes = require("./src/Routes/ticketRoutes");
 
 const app = express();
 
@@ -25,6 +26,7 @@ mongoose.connect(DB_URL,{useNewUrlParser:true})
 
 authRoutes(app);
 userRoutes(app);
+ticketRoutes(app);
 
 
 app.listen(serverConfigs.PORT, ()=>{
