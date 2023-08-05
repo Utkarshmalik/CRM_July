@@ -34,6 +34,7 @@ const createTicket = async (req,res)=>{
 const getTickets = async (req, res)=>{
 
     const userType = req.user.userType;
+    const {status} = req.query;
 
     const query={};
 
@@ -44,6 +45,15 @@ const getTickets = async (req, res)=>{
     if(userType===userTypes.engineer){
         query.assignee=req.user._id
     }
+
+    if(status && !Object.values(ticketStatus).includes(status) ){
+        return res.status(400).send({message:`status passed : ${status} is invalid`})
+    }
+
+    if(status){
+        query.status=status;
+    }
+
 
  try{
         const tickets = await ticketModal.find(query);
@@ -63,6 +73,46 @@ const getTicketDetails = async (req,res)=>{
         const ticket = await ticketModal.find({_id:ticketId});
 
         return res.status(200).send(ticket);
+    }
+    catch(err){
+        return res.status(500).send({message:err.message})
+    }
+}
+
+
+const updateTicketDetails=async (req,res)=>{
+
+    const {ticketId} = req.params;
+
+    const ticketDetails = {...req.body};
+
+     try{
+        const updatedTicket = await ticketModal.findByIdAndUpdate(ticketId, ticketDetails, 
+            {
+        new: true,
+      });
+
+        return res.status(200).send(updatedTicket);
+    }
+    catch(err){
+        return res.status(500).send({message:err.message})
+    }
+
+}
+
+
+const deleteTicket= async (req,res)=>{
+
+    const {ticketId} = req.params;
+    
+    try{
+        const ticket= await ticketModal.findByIdAndDelete(ticketId);
+
+        if(!ticket){
+         return res.status(400).send({message:"Invalid Ticket id"});
+        }
+
+        return res.status(200).send({message:"Ticket deleted successfully"});
     }
     catch(err){
         return res.status(500).send({message:err.message})
@@ -90,5 +140,7 @@ const findEngineer = async ()=>{
 module.exports = {
     createTicket, 
     getTickets,
-    getTicketDetails
+    getTicketDetails,
+    updateTicketDetails,
+    deleteTicket
 }

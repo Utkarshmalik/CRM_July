@@ -1,5 +1,6 @@
 const ticketModel = require("../Models/ticketModel");
 const { userTypes } = require("../utils/constants");
+const { getUpdateTicketPermissions } = require("../utils/permissions");
 
 
 const verifyCreateTicketRequest=(req,res,next)=>{
@@ -22,7 +23,7 @@ const verifyCreateTicketRequest=(req,res,next)=>{
     next();
 };
 
-const verifyGetTicketDetailsRequest = async (req,res,next)=>{
+const verifyTicketAccess = async (req,res,next)=>{
     
     const {ticketId} = req.params;
     const user=req.user;
@@ -51,7 +52,32 @@ const verifyGetTicketDetailsRequest = async (req,res,next)=>{
     next();
 }
 
+
+const verifyUpdateTicketRequest=(req,res,next)=>{
+
+    const permissions = getUpdateTicketPermissions();
+    const userType = req.user.userType
+
+
+
+
+    for(let key in req.body){
+
+        if(!permissions[key]){
+            return res.status(400).send({message:`Invalid field :[${key}] passed, cannot be updated`});
+        }
+
+        if(key && !permissions[key].includes(userType) ){
+            return res.status(403).send({message:`User with userType:[${userType}] is not allowed to update [${key}] field`})
+        }
+    }
+
+    next();
+
+}
+
 module.exports={
     verifyCreateTicketRequest,
-    verifyGetTicketDetailsRequest
+     verifyTicketAccess,
+     verifyUpdateTicketRequest
 }
