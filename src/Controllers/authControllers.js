@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt");
 const userModel = require("../Models/userModel");
 const { userTypes, userStatus } = require("../utils/constants");
 const jwt = require("jsonwebtoken");
+const { sendEmail } = require("../utils/Notifications");
+const { userRegisteration } = require("../scripts/register");
+const { userLogin } = require("../scripts/login");
 
 const register = (req,res)=>{
 
@@ -23,6 +26,10 @@ const register = (req,res)=>{
 
     newUser.save().then(data=>{
     res.status(201).send({message:"User Created successfully!"});
+
+    const {subject, html} = userRegisteration(user);
+
+     sendEmail([user.email],subject, html);
     })
     .catch(err=>{
 
@@ -62,7 +69,9 @@ const login = async (req,res)=>{
       //jwt token 
      const token = jwt.sign({id:userId}, process.env.SECRET, { expiresIn: '1h' });
 
-
+       const {subject, html} = userLogin(user);
+        sendEmail([user.email],subject, html);
+        
      return res.status(200).send({
         name:user.name,
         userId:user.userId,

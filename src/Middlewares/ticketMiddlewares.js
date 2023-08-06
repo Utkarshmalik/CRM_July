@@ -58,9 +58,6 @@ const verifyUpdateTicketRequest=(req,res,next)=>{
     const permissions = getUpdateTicketPermissions();
     const userType = req.user.userType
 
-
-
-
     for(let key in req.body){
 
         if(!permissions[key]){

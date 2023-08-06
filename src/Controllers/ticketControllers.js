@@ -2,6 +2,8 @@ const userModel = require("../Models/userModel");
 const ticketModal = require("../Models/ticketModel");
 
 const { ticketStatus, userTypes } = require("../utils/constants");
+const { ticketCreation, ticketUpdation } = require("../scripts/ticket");
+const { sendEmail } = require("../utils/Notifications");
 
 
 const createTicket = async (req,res)=>{
@@ -22,6 +24,10 @@ const createTicket = async (req,res)=>{
         const ticket = new ticketModal(newTicket);
 
         const ticketCreated = await ticket.save();
+
+           const {subject, html} = ticketCreation(user, ticketCreated);
+          sendEmail([user.email],subject, html);
+    
 
         return res.status(200).send(ticketCreated);
     }
@@ -91,6 +97,13 @@ const updateTicketDetails=async (req,res)=>{
             {
         new: true,
       });
+
+      if(ticketDetails.status){
+        const user = await userModel.findById(updatedTicket.requestor);
+            const {subject, html} = ticketUpdation(user, updatedTicket);
+
+            sendEmail([user.email],subject, html);
+       }
 
         return res.status(200).send(updatedTicket);
     }

@@ -8,6 +8,7 @@ const userRoutes = require("./src/Routes/userRoutes");
 const serverConfigs = require("./src/configs/server.configs");
 const { DB_URL } = require("./src/configs/db.configs");
 const ticketRoutes = require("./src/Routes/ticketRoutes");
+const { sendEmail } = require("./src/utils/Notifications");
 
 const app = express();
 
@@ -22,6 +23,7 @@ mongoose.connect(DB_URL,{useNewUrlParser:true})
 .catch((err)=>{
     console.log("Couldn't connect to the database", err);
 })
+
 
 
 authRoutes(app);
