@@ -6,7 +6,7 @@ const { sendEmail } = require("../utils/Notifications");
 const { userRegisteration } = require("../scripts/register");
 const { userLogin } = require("../scripts/login");
 
-const register = (req,res)=>{
+const register = async (req,res)=>{
 
     const {name, userId, email, password, userType} = req.body;
 
@@ -24,21 +24,27 @@ const register = (req,res)=>{
 
     const newUser = new userModel(user);
 
-    newUser.save().then(data=>{
-    res.status(201).send({message:"User Created successfully!"});
-
-    const {subject, html} = userRegisteration(user);
-
-     sendEmail([user.email],subject, html);
-    })
-    .catch(err=>{
-
+    try{
+        await newUser.save();
+        return res.status(201).send({message:"User Created successfully!"});
+    }
+    catch(err){
         if(err.code===11000){
             return res.status(400).send({message:"UserId/Email already exists in the database"});
         }
 
         return res.status(500).send({message:err.message})
-    })
+    }
+
+    // newUser.save().then(data=>{
+
+    // const {subject, html} = userRegisteration(user);
+
+    //  sendEmail([user.email],subject, html);
+    // })
+    // .catch(err=>{
+       
+    // })
 }
 
 const login = async (req,res)=>{
@@ -79,7 +85,6 @@ const login = async (req,res)=>{
         userType:user.userType,
         userStatus:user.userStatus,
         accessToken:token
-
      })
     }
     catch(err){
