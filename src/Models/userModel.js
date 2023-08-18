@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
         unique:true,
         validate:{
             validator:validator.isEmail
-        }
+        },
+        index:true
     },
     password:{
         type:String,
@@ -32,7 +33,8 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true,
         enum: Object.values(userTypes),
-        default:userTypes.customer
+        default:userTypes.customer,
+        index:true
     },
     userStatus:{
         type:String,

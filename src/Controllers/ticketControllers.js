@@ -1,7 +1,7 @@
 const userModel = require("../Models/userModel");
 const ticketModal = require("../Models/ticketModel");
 
-const { ticketStatus, userTypes } = require("../utils/constants");
+const { ticketStatus, userTypes, userStatus } = require("../utils/constants");
 const { ticketCreation, ticketUpdation } = require("../scripts/ticket");
 const { sendEmail } = require("../utils/Notifications");
 
@@ -134,19 +134,34 @@ const deleteTicket= async (req,res)=>{
 
 
 const findEngineer = async ()=>{
-    
-    const engineers = await userModel.find({userType:userTypes.engineer});
 
-    // TODO : find the engineer with the least amount of tickets in open/inProgress state 
+     const engineers = await userModel.find({userType:userTypes.engineer, userStatus:userStatus.approved});
+
 
     if(!engineers.length){
         return null;
     }
 
-    const engineer= engineers[(Math.floor(Math.random() * engineers.length))];
+    return new Promise ((resolve, reject)=>{
 
-    console.log(engineer);
-    return engineer._id;
+         var assignee=null;
+        let minTicketsAssigned = Number.POSITIVE_INFINITY;
+
+         engineers.forEach(async (engineer, i, engineers) => {
+        
+            const tickets = await ticketModal.find({ assignee: engineer._id, status: { $in: [ticketStatus.open, ticketStatus.inProgress] } });
+
+        if (tickets.length < minTicketsAssigned) {
+            minTicketsAssigned = tickets.length;
+            assignee = engineer;
+        }
+
+        if(i===engineers.length-1){
+            resolve(assignee._id);
+        }
+       })
+    })
+   
 }
 
 
