@@ -62,8 +62,7 @@ const getTickets = async (req, res)=>{
 
 
  try{
-        const tickets = await ticketModal.find(query);
-
+        const tickets = await ticketModal.find(query).cache(30);
         return res.status(200).send(tickets);
     }
     catch(err){

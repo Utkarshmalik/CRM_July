@@ -1,0 +1,6 @@
+::1 - - [19/Aug/2023:14:25:11 +0000] "POST /crm/api/v1/tickets HTTP/1.1" 200 315 "-" "PostmanRuntime/7.32.3"
+::1 - - [19/Aug/2023:14:25:14 +0000] "POST /crm/api/v1/tickets HTTP/1.1" 200 315 "-" "PostmanRuntime/7.32.3"
+::1 - - [19/Aug/2023:14:26:13 +0000] "GET /crm/api/v1/tickets/ HTTP/1.1" 200 12082 "-" "PostmanRuntime/7.32.3"
+::1 - - [19/Aug/2023:14:26:15 +0000] "POST /crm/api/v1/auth/signin HTTP/1.1" 200 277 "-" "PostmanRuntime/7.32.3"
+::1 - - [19/Aug/2023:14:26:17 +0000] "POST /crm/api/v1/auth/signin HTTP/1.1" 200 265 "-" "PostmanRuntime/7.32.3"
+::1 - - [19/Aug/2023:14:26:19 +0000] "POST /crm/api/v1/auth/signin HTTP/1.1" 200 279 "-" "PostmanRuntime/7.32.3"

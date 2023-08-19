@@ -10,8 +10,20 @@ const { DB_URL } = require("./src/configs/db.configs");
 const ticketRoutes = require("./src/Routes/ticketRoutes");
 const { sendEmail } = require("./src/utils/Notifications");
 const cors = require("cors");
+var cachegoose = require('recachegoose');
+var morgan = require('morgan')
+var fs = require('fs')
+
+cachegoose(mongoose, {
+  engine: 'memory'
+});
+
+
 
 var whitelist = ['http://127.0.0.1:5501', "/\.amazon.com\.com$/"]
+var path = require('path')
+
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
 var corsOptions = {
   origin: function (origin, callback) {
@@ -25,11 +37,11 @@ var corsOptions = {
 }
  
 
-
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors())
+app.use(morgan('combined', { stream: accessLogStream }))
 
 
 mongoose.connect(DB_URL,{useNewUrlParser:true})
@@ -50,3 +62,4 @@ ticketRoutes(app);
 app.listen(serverConfigs.PORT, ()=>{
     console.log(`Server is up and running on PORT ${serverConfigs.PORT}`);
 })
+
